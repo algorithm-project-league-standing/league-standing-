@@ -79,6 +79,11 @@ int main()
             stoint[homeTeam] = counter++;
             inttos[counter] = homeTeam;
         }
+        if(stoint.find(awayTeam) == stoint.end()){
+            nteam++;
+            stoint[awayTeam] = counter++;
+            inttos[counter] = awayTeam;
+        }
     }
     data.close();
     adj = vector<vector<pair<int, Match>>>(nteam);
