@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "xstring": "cpp",
+        "map": "cpp",
+        "iosfwd": "cpp",
+        "chrono": "cpp",
+        "utility": "cpp",
+        "string": "cpp",
+        "iostream": "cpp",
+        "iomanip": "cpp"
+    }
+}
