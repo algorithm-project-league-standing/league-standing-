@@ -1,22 +1,28 @@
-#include <D:\Documents\C++\asd\stdc++.h>
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <map>
+#include <string>
+#include <queue>
+#include <iomanip>
+#include <algorithm>
+
 using namespace std;
-#define ll long long
+
 #define nl "\n"
-#define FIO ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-const long long MOD = 1e9 + 7, OO = 1e13;
-const double PI = acos(-1);
-const long long N = 1e6 + 5, M = 1e5 + 5;
-const int dx[4] = {0, 0, 1, -1};
-const int dy[4] = {1, -1, 0, 0};
-
-
 #define match v.second
 
+/* classes */
 class Match
 {
     public:
-    int homeGoals, awayGoals,  round, date;
-    string result;
+        int homeGoals;
+        int awayGoals;
+        int round;
+        int  date;
+        string result;
+
         Match(int r, int d, int hg, int ag, string rs){
             round = r;
             date = d;
@@ -29,13 +35,30 @@ class Match
 class Team
 {
     public:
-    string teamName;
-    int  matchPlayed, wins, drawns, loses, goalsFor, goalsAgainst, goalsDiff, points;
+        string teamName;
+        int  matchPlayed;
+        int wins;
+        int drawns;
+        int loses;
+        int goalsFor;
+        int goalsAgainst;
+        int goalsDiff;
+        int points;
+
         Team(string s){
             teamName = s;
-            matchPlayed = 0, wins = 0, drawns = 0, loses = 0, goalsFor = 0, goalsAgainst = 0, goalsDiff = 0, points = 0;    
+            matchPlayed = 0;
+            wins = 0;
+            drawns = 0;
+            loses = 0;
+            goalsFor = 0;
+            goalsAgainst = 0;
+            goalsDiff = 0;
+            points = 0;    
         }
 };
+
+/* global variables */
 
 int counter, nteam;
 map<string, int> stoint;
@@ -43,29 +66,17 @@ map<int, string> inttos;
 vector<vector<pair<int, Match>>> adj;
 vector<int> vis;
 
-int stringToInt(string s){
-    int res = 0;
-    for(auto el: s)
-    {
-        res = (res * 10) + (el - '0');
-    } 
-    return res;
-}
 
-int dateToInt(string s){
-    int year, month, day;
-    std::sscanf(s.c_str(), "%d/%d/%d", &day, &month, &year) ;
-    return 10000 * year + 100 * month + day;
-}
+/* prototypes */
 
-bool srt(Team t1, Team t2){
-    if(t1.points != t2.points)return t1.points > t2.points;
-    else if(t1.goalsFor != t2.goalsFor) return t1.goalsFor > t2.goalsFor;
-    else return t1.goalsDiff > t2.goalsDiff;
-}
+int stringToInt(string s);
+int dateToInt(string s);
+bool srt(Team t1, Team t2);
 
-int main()
-{
+/* main function */
+
+int main(){
+
     fstream data;
     string s, round, date, homeTeam, awayTeam, homeGoals, awayGoals, result; 
     data.open("epl_results.csv", ios::in);
@@ -86,6 +97,7 @@ int main()
         }
     }
     data.close();
+
     adj = vector<vector<pair<int, Match>>>(nteam);
     vis = vector<int>(nteam, 0);
 
@@ -108,95 +120,106 @@ int main()
         for(auto el : inttos){
             teams.push_back(Team(el.second));
         }
-        int pole, choice; 
-        cout << nl <<  "1 - Search by round " << nl << nl << "2 - search by date " << nl << nl ; 
+        int trio, choice; 
+        cout << nl <<  "1 - Search by round " << nl << nl << "2 - search by date " << nl << nl << "3 - End The Program " << nl << nl ; 
         cout << "Enter Your Choice : ";
-        cin >> pole ; 
-        if(pole == 1){
+        cin >> trio ; 
+        if(trio == 1){
             cout << "Enter the round number : ";
             cin >> choice; 
-            q.push(1);
-            vis[1] = 1;
-            while(!q.empty()){
-                int u = q.front();
-                q.pop();
-                for(auto v : adj[u]){
-                    if(match.round <= choice){
-                        teams[u].goalsFor += match.homeGoals;
-                        teams[v.first].goalsAgainst += match.homeGoals;
-                        teams[u].goalsAgainst += match.awayGoals;
-                        teams[v.first].goalsFor += match.awayGoals;
-                        teams[u].matchPlayed++;
-                        teams[v.first].matchPlayed++;
-                        if(match.result == "H"){
-                            teams[u].wins++;
-                            teams[u].points +=3;
-                            teams[v.first].loses ++;
+            for(int i = 1; i <= nteam; ++i){
+                if(!vis[i]){
+                    q.push(i);
+                    vis[i] = 1;
+                    while(!q.empty()){
+                        int u = q.front();
+                        q.pop();
+                        for(auto v : adj[u]){
+                            if(match.round <= choice){
+                                teams[u].goalsFor += match.homeGoals;
+                                teams[v.first].goalsAgainst += match.homeGoals;
+                                teams[u].goalsAgainst += match.awayGoals;
+                                teams[v.first].goalsFor += match.awayGoals;
+                                teams[u].matchPlayed++;
+                                teams[v.first].matchPlayed++;
+                                if(match.result == "H"){
+                                    teams[u].wins++;
+                                    teams[u].points +=3;
+                                    teams[v.first].loses ++;
+                                }
+                                else if(match.result == "A"){
+                                    teams[v.first].wins++;
+                                    teams[v.first].points +=3;
+                                    teams[u].loses ++;
+                                }
+                                else{
+                                    teams[u].drawns++;
+                                    teams[v.first].drawns++;
+                                    teams[u].points++;
+                                    teams[v.first].points++;
+                                }
+                            }
+                            if(!vis[v.first]){
+                                q.push(v.first);
+                                vis[v.first] = 1;
+                            }
                         }
-                        else if(match.result == "A"){
-                            teams[v.first].wins++;
-                            teams[v.first].points +=3;
-                            teams[u].loses ++;
-                        }
-                        else{
-                            teams[u].drawns++;
-                            teams[v.first].drawns++;
-                            teams[u].points++;
-                            teams[v.first].points++;
-                        }
-                    }
-                    if(!vis[v.first]){
-                        q.push(v.first);
-                        vis[v.first] = 1;
                     }
                 }
             }
         }
-        else{
+        else if(trio == 2){
             cout << "Enter the date in the form 'dd/mm/year' : " ;
             string da;
             cin >> da;
             choice = dateToInt(da);
-            q.push(1);
-            vis[1] = 1;
-            while(!q.empty()){
-                int u = q.front();
-                q.pop();
-                for(auto v : adj[u]){
-                    if(match.date <= choice){
-                        teams[u].goalsFor += match.homeGoals;
-                        teams[v.first].goalsAgainst += match.homeGoals;
-                        teams[u].goalsAgainst += match.awayGoals;
-                        teams[v.first].goalsFor += match.awayGoals;
-                        teams[u].matchPlayed++;
-                        teams[v.first].matchPlayed++;
-                        if(match.result == "H"){
-                            teams[u].wins++;
-                            teams[u].points +=3;
-                            teams[v.first].loses ++;
+            for(int i = 1; i <= nteam; ++i){
+                if(!vis[i]){
+                    q.push(i);
+                    vis[i] = 1;
+                    while(!q.empty()){
+                        int u = q.front();
+                        q.pop();
+                        for(auto v : adj[u]){
+                            if(match.date <= choice){
+                                teams[u].goalsFor += match.homeGoals;
+                                teams[v.first].goalsAgainst += match.homeGoals;
+                                teams[u].goalsAgainst += match.awayGoals;
+                                teams[v.first].goalsFor += match.awayGoals;
+                                teams[u].matchPlayed++;
+                                teams[v.first].matchPlayed++;
+                                if(match.result == "H"){
+                                    teams[u].wins++;
+                                    teams[u].points +=3;
+                                    teams[v.first].loses ++;
+                                }
+                                else if(match.result == "A"){
+                                    teams[v.first].wins++;
+                                    teams[v.first].points +=3;
+                                    teams[u].loses ++;
+                                }
+                                else{
+                                    teams[u].drawns++;
+                                    teams[v.first].drawns++;
+                                    teams[u].points++;
+                                    teams[v.first].points++;
+                                }
+                            }
+                            if(!vis[v.first]){
+                                q.push(v.first);
+                                vis[v.first] = 1;
+                            }
                         }
-                        else if(match.result == "A"){
-                            teams[v.first].wins++;
-                            teams[v.first].points +=3;
-                            teams[u].loses ++;
-                        }
-                        else{
-                            teams[u].drawns++;
-                            teams[v.first].drawns++;
-                            teams[u].points++;
-                            teams[v.first].points++;
-                        }
-                    }
-                    if(!vis[v.first]){
-                        q.push(v.first);
-                        vis[v.first] = 1;
                     }
                 }
             }
         }
+        else {
+            break;
+        }
         sort(teams.begin(), teams.end(), srt);
         cout << nl << nl;;
-        ll cnt = 1;
+        int cnt = 1;
             cout<< left << setw(13)  << "#" 
                 << left << setw(23) << "Team"
                 << left << setw(13)  << "M Played" 
@@ -225,8 +248,31 @@ int main()
         }
         cout << "======================================================================================================================================" << nl << nl;
         teams.clear();
-        // q.clear();
     }
 
     return 0;
+}
+
+
+/* Fuctions */
+
+int stringToInt(string s){
+    int res = 0;
+    for(auto el: s)
+    {
+        res = (res * 10) + (el - '0');
+    } 
+    return res;
+}
+
+int dateToInt(string s){
+    int year, month, day;
+    std::sscanf(s.c_str(), "%d/%d/%d", &day, &month, &year) ;
+    return 10000 * year + 100 * month + day;
+}
+
+bool srt(Team t1, Team t2){
+    if(t1.points != t2.points)return t1.points > t2.points;
+    else if(t1.goalsFor != t2.goalsFor) return t1.goalsFor > t2.goalsFor;
+    else return t1.goalsDiff > t2.goalsDiff;
 }
