@@ -14,6 +14,7 @@ using namespace std;
 #define match v.second
 
 /* classes */
+
 class Match
 {
     public:
@@ -101,7 +102,7 @@ int main(){
     data.close();
 
     adj = vector<vector<pair<int, Match>>>(nteam);
-    vis = vector<int>(nteam, 0);
+    vis = vector<int>(nteam + 1, 0);
 
     data.open("epl_results.csv", ios::in);
     getline(data, s, ',');getline(data, s, ',');getline(data, s, ',');getline(data, s, ',');
@@ -128,7 +129,7 @@ int main(){
         if(trio == 1){
             cout << "Enter the round number : ";
             cin >> choice; 
-            for(int i = 1; i <= nteam; ++i){
+            for(int i = 0; i < nteam; ++i){
                 if(!vis[i]){
                     BFS_round(i, choice, teams);
                 }
@@ -139,7 +140,7 @@ int main(){
             string da;
             cin >> da;
             choice = dateToInt(da);
-            for(int i = 1; i <= nteam; ++i){
+            for(int i = 0; i < nteam; ++i){
                 if(!vis[i]){
                     BFS_date(i, choice, teams);
                 }
