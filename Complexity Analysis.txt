@@ -1,0 +1,20 @@
+The time complexity and space complexity of the program depend on the size of the input data. 
+Here's an analysis of each portion of the code:
+
+1. Reading CSV file: O(E lg V), 
+  where E is the number of played matches and V is the number of teams.
+
+2. Initializing data structures: O(V+E) -> from adjlist -> space Complexity, 
+  where V is the number of teams and E is the number of played matches.
+
+3. Traversing the graph to calculate standings by round or date: 
+  O(V+E), where V is the number of teams and E is the number of played matches.
+
+4. Sorting the teams based on points, goal difference, and goals scored:
+   O(V log V), where V is the number of teams.
+
+5. Writing to the output CSV file: O(V), where V is the number of teams.
+
+Therefore, the overall 
+time complexity of the program is O(E lg V), and the 
+space complexity is O(V+E).
