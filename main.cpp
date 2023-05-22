@@ -75,41 +75,46 @@ bool srt(Team t1, Team t2);
 
 /* main function */
 
+// V (vertices) is the number of teams
+// E (Edges) is the number of played matches  
+
 int main(){
 
+    // O (E lg V)
     fstream data;
     string s, round, date, homeTeam, awayTeam, homeGoals, awayGoals, result; 
     data.open("epl_results.csv", ios::in);
     getline(data, s, ',');getline(data, s, ',');getline(data, s, ',');getline(data, s, ',');
-    getline(data, s, ',');getline(data, s, ',');getline(data, s, '\n');
-    while(getline(data, round, ',')){
+    getline(data, s, ',');getline(data, s, ',');getline(data, s, '\n');    // -> O(1)
+    while(getline(data, round, ',')){                               // -> O(E)
         getline(data, date, ',');getline(data, homeTeam, ',');getline(data, awayTeam, ',');
         getline(data, homeGoals, ',');getline(data, awayGoals, ',');getline(data, result, '\n');
         if(stoint.find(homeTeam) == stoint.end()){
-            nteam++;
-            stoint[homeTeam] = counter++;
-            inttos[counter] = homeTeam;
+            nteam++;  // -> O(1)
+            stoint[homeTeam] = counter++;  // -> O(1)
+            inttos[counter] = homeTeam;    // -> O(1)
         }
-        if(stoint.find(awayTeam) == stoint.end()){
-            nteam++;
-            stoint[awayTeam] = counter++;
-            inttos[counter] = awayTeam;
+        if(stoint.find(awayTeam) == stoint.end()){                  // -> O(lg V)
+            nteam++; // -> O(1)
+            stoint[awayTeam] = counter++; // -> O(1)
+            inttos[counter] = awayTeam; // -> O(1)
         }
     }
     data.close();
 
-    adj = vector<vector<pair<int, Match>>>(nteam);
-    vis = vector<int>(nteam, 0);
+    // O(E)
+    adj = vector<vector<pair<int, Match>>>(nteam);     // -> O(V)
+    vis = vector<int>(nteam, 0);                       // -> O(V)
 
     data.open("epl_results.csv", ios::in);
     getline(data, s, ',');getline(data, s, ',');getline(data, s, ',');getline(data, s, ',');
-    getline(data, s, ',');getline(data, s, ',');getline(data, s, '\n');
-    while(getline(data, round, ',')){
+    getline(data, s, ',');getline(data, s, ',');getline(data, s, '\n');    // O(1)
+    while(getline(data, round, ',')){  // O(E)
         getline(data, date, ',');getline(data, homeTeam, ',');getline(data, awayTeam, ',');
-        getline(data, homeGoals, ',');getline(data, awayGoals, ',');getline(data, result, '\n');
-        if(awayGoals == "-" ) continue; 
-        Match m (stringToInt(round), dateToInt(date), stringToInt(homeGoals), stringToInt(awayGoals), result);
-        adj[stoint[homeTeam]].push_back({stoint[awayTeam],m});
+        getline(data, homeGoals, ',');getline(data, awayGoals, ',');getline(data, result, '\n'); // O(1)
+        if(awayGoals == "-" ) continue; // O(1)
+        Match m (stringToInt(round), dateToInt(date), stringToInt(homeGoals), stringToInt(awayGoals), result); // O(1)
+        adj[stoint[homeTeam]].push_back({stoint[awayTeam],m}); // O(1)
     }
     data.close();
 
@@ -117,8 +122,8 @@ int main(){
     while(true){
         vector<Team> teams;
         for(int i = 0; i <= nteam; ++i) vis[i] = 0;
-        for(auto el : inttos){
-            teams.push_back(Team(el.second));
+        for(auto el : inttos){          // O(V)
+            teams.push_back(Team(el.second));  // O(1)
         }
         int trio, choice; 
         cout << nl <<  "1 - Search by round " << nl << nl << "2 - search by date " << nl << nl << "3 - End The Program " << nl << nl ; 
@@ -127,15 +132,18 @@ int main(){
         if(trio == 1){
             cout << "Enter the round number : ";
             cin >> choice; 
+            
+            // O(V+E)
             for(int i = 1; i <= nteam; ++i){
-                if(!vis[i]){
+                if(!vis[i]){ // O(1)
                     q.push(i);
                     vis[i] = 1;
-                    while(!q.empty()){
-                        int u = q.front();
-                        q.pop();
-                        for(auto v : adj[u]){
-                            if(match.round <= choice){
+                    while(!q.empty()){   // O(V)
+                        int u = q.front(); // O(1)
+                        q.pop(); // O(1)
+                        for(auto v : adj[u]){ // O(E)
+                            // # define v.second match 
+                            if(match.round <= choice){ // O(1)
                                 teams[u].goalsFor += match.homeGoals;
                                 teams[v.first].goalsAgainst += match.homeGoals;
                                 teams[u].goalsAgainst += match.awayGoals;
@@ -159,8 +167,8 @@ int main(){
                                     teams[v.first].points++;
                                 }
                             }
-                            if(!vis[v.first]){
-                                q.push(v.first);
+                            if(!vis[v.first]){ // O(1)
+                                q.push(v.first); 
                                 vis[v.first] = 1;
                             }
                         }
@@ -173,6 +181,7 @@ int main(){
             string da;
             cin >> da;
             choice = dateToInt(da);
+            // O(V+E)
             for(int i = 1; i <= nteam; ++i){
                 if(!vis[i]){
                     q.push(i);
@@ -218,7 +227,7 @@ int main(){
             break;
         }
 
-        sort(teams.begin(), teams.end(), srt);
+        sort(teams.begin(), teams.end(), srt);  // O(V lg V)
 
         ofstream out("league standing.csv");
         cout << nl << nl;
@@ -238,9 +247,9 @@ int main(){
     
         out << "#" << ','<< "Team" << ',' << "M Played" << ',' << "Wins" << ',' <<
                 "Drawns" << ',' << "Loses" << ',' << "G For" << ',' << "G Against" << ',' <<
-                "G Diff" << ',' << "G Diff" << '\n';
+                "G Diff" << ',' << "G Diff" << '\n';  // O(1)
 
-        for(auto el : teams){
+        for(auto el : teams){   // O(V)
             cout<< left << setw(13) << cnt 
                 << left << setw(23) << el.teamName 
                 << left << setw(13) << el.matchPlayed 
@@ -268,6 +277,7 @@ int main(){
 
 /* Fuctions */
 
+// O(1)
 int stringToInt(string s){
     int res = 0;
     for(auto el: s)
@@ -277,12 +287,14 @@ int stringToInt(string s){
     return res;
 }
 
+// O(1)
 int dateToInt(string s){
     int year, month, day;
     std::sscanf(s.c_str(), "%d/%d/%d", &day, &month, &year) ;
     return 10000 * year + 100 * month + day;
 }
 
+// O(1)
 bool srt(Team t1, Team t2){
     if(t1.points != t2.points)return t1.points > t2.points;
     else if(t1.goalsFor != t2.goalsFor) return t1.goalsFor - t1.goalsAgainst > t2.goalsFor - t2.goalsAgainst;
