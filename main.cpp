@@ -62,10 +62,10 @@ class Team
 /* global variables */
 
 int counter, nteam, cnt;
-map<string, int> stoint;
-map<int, string> inttos;
-vector<vector<pair<int, Match>>> adj;
-vector<int> vis;
+map<string, int> stoint;                            // O(V)                            
+map<int, string> inttos;                            // O(V) 
+vector<vector<pair<int, Match>>> adj;               // O(V + E)
+vector<int> vis;                                    // O(V)
 queue<int> q;
 
 /* prototypes */
@@ -217,7 +217,8 @@ int dateToInt(string s){
 
 bool srt(Team t1, Team t2){
     if(t1.points != t2.points)return t1.points > t2.points;
-    else if(t1.goalsFor - t1.goalsAgainst != t2.goalsFor - t2.goalsAgainst) return t1.goalsFor - t1.goalsAgainst > t2.goalsFor - t2.goalsAgainst;
+    else if(t1.goalsFor - t1.goalsAgainst != t2.goalsFor - t2.goalsAgainst) 
+        return t1.goalsFor - t1.goalsAgainst > t2.goalsFor - t2.goalsAgainst;
     else return t1.goalsFor > t2.goalsFor;
 }
 
