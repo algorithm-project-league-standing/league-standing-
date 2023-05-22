@@ -20,7 +20,7 @@ The program uses several C++ classes:
 ## Standard Library Functions
 
 The program uses several C++ standard library functions, including:
-
+- `map`: Maps are associative containers that store elements in a mapped fashion. Each element has a key value and a mapped value. No two mapped values can have            the same key values.
 - `getline`: reads a line of input from the CSV file
 - `stringstream`: parses the input line into individual fields
 - `setw`: sets the width of output columns in the league table
