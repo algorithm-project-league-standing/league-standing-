@@ -60,7 +60,7 @@ class Team
 
 /* global variables */
 
-int counter, nteam;
+int counter, nteam, cnt;
 map<string, int> stoint;
 map<int, string> inttos;
 vector<vector<pair<int, Match>>> adj;
@@ -217,21 +217,29 @@ int main(){
         else {
             break;
         }
+
         sort(teams.begin(), teams.end(), srt);
-        cout << nl << nl;;
-        int cnt = 1;
-            cout<< left << setw(13)  << "#" 
-                << left << setw(23) << "Team"
-                << left << setw(13)  << "M Played" 
-                << left << setw(13)  << "Wins" 
-                << left << setw(13)  << "Drawns" 
-                << left << setw(13)  << "Loses" 
-                << left << setw(13)  << "G For" 
-                << left << setw(13)  << "G Against" 
-                << left << setw(13)  << "G Diff"  
-                << left << setw(13)  << "Points" 
-                << nl << nl;
-            cout << "======================================================================================================================================" << nl << nl;
+
+        ofstream out("league standing.csv");
+        cout << nl << nl;
+        cnt = 1;
+        cout<< left << setw(13)  << "#" 
+            << left << setw(23) << "Team"
+            << left << setw(13)  << "M Played" 
+            << left << setw(13)  << "Wins" 
+            << left << setw(13)  << "Drawns" 
+            << left << setw(13)  << "Loses" 
+            << left << setw(13)  << "G For" 
+            << left << setw(13)  << "G Against" 
+            << left << setw(13)  << "G Diff"  
+            << left << setw(13)  << "Points" 
+            << nl << nl;
+        cout << "======================================================================================================================================" << nl << nl;
+    
+        out << "#" << ','<< "Team" << ',' << "M Played" << ',' << "Wins" << ',' <<
+                "Drawns" << ',' << "Loses" << ',' << "G For" << ',' << "G Against" << ',' <<
+                "G Diff" << ',' << "G Diff" << '\n';
+
         for(auto el : teams){
             cout<< left << setw(13) << cnt 
                 << left << setw(23) << el.teamName 
@@ -244,10 +252,14 @@ int main(){
                 << left << setw(13) << el.goalsFor - el.goalsAgainst 
                 << left << setw(13) << el.points 
                 << nl << nl;
+
+            out << cnt << ','<< el.teamName << ',' << el.matchPlayed << ',' << el.wins << ',' <<
+                el.drawns << ',' << el.loses << ',' << el.goalsFor << ',' << el.goalsAgainst << ',' <<
+                el.goalsFor - el.goalsAgainst << ',' << el.points << '\n';
+
             cnt++;
         }
         cout << "======================================================================================================================================" << nl << nl;
-        teams.clear();
     }
 
     return 0;
@@ -273,6 +285,6 @@ int dateToInt(string s){
 
 bool srt(Team t1, Team t2){
     if(t1.points != t2.points)return t1.points > t2.points;
-    else if(t1.goalsFor != t2.goalsFor) return t1.goalsFor > t2.goalsFor;
-    else return t1.goalsDiff > t2.goalsDiff;
+    else if(t1.goalsFor != t2.goalsFor) return t1.goalsFor - t1.goalsAgainst > t2.goalsFor - t2.goalsAgainst;
+    else return t1.goalsFor < t2.goalsFor;
 }
