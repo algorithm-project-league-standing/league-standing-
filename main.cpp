@@ -75,6 +75,7 @@ int dateToInt(string s);
 bool srt(Team t1, Team t2);
 void BFS_date(int s, int choice, vector<Team> &team);
 void BFS_round(int s, int choice, vector<Team> &team);
+bool isValidDate(string dateStr);
 
 /* main function */
 
@@ -128,7 +129,12 @@ int main(){
         cin >> trio ; 
         if(trio == 1){
             cout << "Enter the round number : ";
-            cin >> choice; 
+            cin >> choice;
+            while(choice < 1 || choice > 2 * (nteam - 1)){
+                cout << nl  << "INVALID INPUT THE ROUND NUMBER MUST BE FROM '1' TO '" <<  2  * (nteam - 1) << "'\n";
+                cout << nl << "Enter the round number again : ";
+                cin >> choice;
+            }
             for(int i = 0; i < nteam; ++i){
                 if(!vis[i]){
                     BFS_round(i, choice, teams);
@@ -139,6 +145,11 @@ int main(){
             cout << "Enter the date in the form 'dd/mm/year' : " ;
             string da;
             cin >> da;
+            while(!isValidDate(da)){
+                cout << "INVALID DATEINPUT THE ROUND\nTHE DATE MUST BE IN THE FORMAT \"dd/mm/yyyy\"\n";
+                cout << "Enter the date in the form 'dd/mm/year' again : " ;
+                cin >> da;
+            }
             choice = dateToInt(da);
             for(int i = 0; i < nteam; ++i){
                 if(!vis[i]){
@@ -147,6 +158,7 @@ int main(){
             }
         }
         else {
+            cout << "PROGRAM ENDED\n";
             break;
         }
 
@@ -298,4 +310,20 @@ void BFS_date(int s, int choice, vector<Team> &teams){
             }
         }
     }
+}
+
+bool isValidDate(string dateStr) {
+    if (dateStr.length() != 10) {
+        return false;
+    }
+    int day = stoi(dateStr.substr(0, 2));
+    int month = stoi(dateStr.substr(3, 2));
+    int year = stoi(dateStr.substr(6, 4));
+    if (dateStr[2] != '/' || dateStr[5] != '/') {
+        return false;
+    }
+    if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1000) {
+        return false;
+    }
+    return true;
 }
