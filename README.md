@@ -45,7 +45,7 @@ Specifically, in reading the input from file, we map every team with a number an
 
 In the BFS traversal, each node in the graph is visited exactly once, and each edge is examined once to update the statistics of both teams involved in the match. Therefore, the time complexity of the BFS traversal is `O(V + E)`.
 
-In the sorting step, the program sorts all E teams based on their statistics using the sort function, which compares each team's points, goal difference and goals for in that order. The sorting is done using the C++ standard library sort function, which has a worst-case time complexity of `O(V * log(V))`. However, in practice, the number of teams in the EPL is relatively small (20 teams as of 2021), so the sorting step is not likely to be a bottleneck in the program's performance.
+In the sorting step, the program sorts all V teams based on their statistics using the sort function, which compares each team's points, goal difference and goals for in that order. The sorting is done using the C++ standard library sort function, which has a worst-case time complexity of `O(V * log(V))`. However, in practice, the number of teams in the EPL is relatively small (20 teams as of 2021), so the sorting step is not likely to be a bottleneck in the program's performance.
 
 Overall, the time complexity of this program should be sufficient for processing the EPL results CSV file, even if it contains several years' worth of data.
 
