@@ -124,7 +124,9 @@ int main(){
             teams.push_back(Team(el.second));
         }
         int trio, choice; 
-        cout << nl <<  "1 - Search by round " << nl << nl << "2 - search by date " << nl << nl << "3 - End The Program " << nl << nl ; 
+        cout << nl << "\t<<  League Standing  >>" << nl;
+        cout << "\t   =================" << nl;
+        cout << nl <<  "\t\t1 - Search by round " << nl << nl << "\t\t2 - search by date " << nl << nl << "\t\t3 - End The Program " << nl << nl ; 
         cout << "Enter Your Choice : ";
         cin >> trio ; 
         if(trio == 1){
@@ -142,11 +144,11 @@ int main(){
             }
         }
         else if(trio == 2){
-            cout << "Enter the date in the form 'dd/mm/year' : " ;
+            cout << "Enter the date in the form 'DD/MM/YYYY' : " ;
             string da;
             cin >> da;
             while(!isValidDate(da)){
-                cout << "INVALID DATEINPUT THE ROUND\nTHE DATE MUST BE IN THE FORMAT \"dd/mm/yyyy\"\n";
+                cout << "\nINVALID DATEINPUT \n\nTHE DATE MUST BE IN THE FORMAT \"DD/MM/YYYY\"\n\n";
                 cout << "Enter the date in the form 'dd/mm/year' again : " ;
                 cin >> da;
             }
